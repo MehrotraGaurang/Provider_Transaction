@@ -4,7 +4,7 @@ app:
   datasource:
     jdbc-url: jdbc:mysql://localhost:3306/test
     username: sa
-    password: password
+    password: 1234
     pool-size: 30
 spring:
   jpa:
