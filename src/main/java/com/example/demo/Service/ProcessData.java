@@ -1,5 +1,7 @@
 package com.example.demo.Service;
 
+import com.example.demo.models.Provider;
+import com.example.demo.models.Transaction_Info;
 import com.example.demo.properties.PropertiesConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -14,8 +16,6 @@ import java.util.*;
 @Component
 public class ProcessData extends AbstractProcessor<String, String> {
 
-    private HashMap<String, String> record = new HashMap<>();
-    private HashSet<String> checkExists = new HashSet<>();
     private Producer<String, String> producer;
     private PropertiesConfig propertiesConfig = new PropertiesConfig();
     private final SendToTable sendToTable;
@@ -36,54 +36,45 @@ public class ProcessData extends AbstractProcessor<String, String> {
     }
 
     @Override
-    public void process(String s, String provider) {
+    public void process(String s, String record) {
 
-        String [] values = provider.split("#");
+        Provider provider = new Provider(record);
 
-        String transaction_info = values[3];
+        HashSet<String> checkExists = new HashSet<>();
 
-        String isFraud = "FALSE";
+        List<Transaction_Info> transaction_info = provider.getTransaction_infos();
 
-        if(checkExists.contains(transaction_info)){
-            isFraud = "TRUE";
-            fraudRecordDetected(values[0], values);
-        }
-        else
-        {
-            List<String> transactions = Arrays.asList(transaction_info.split("\\|"));
-            Long total_amount = 0L;
-            List<String> TIN_ALL = new ArrayList<>();
-            System.out.println("\n" + transaction_info + "\n");
-            System.out.println("\n************* " + transactions.get(0) + " ***************\n") ;
-            System.out.println("\n************* " + transactions.get(0).split(",")[2] + " ***************\n") ;
-            System.out.println("\n************* " + transactions.get(0).split(",")[2].split("\\:")[1] + " ***************\n") ;
+        Long total_amount = 0L;
+        List<String> TIN_ALL = new ArrayList<>();
 
-            for(String transaction: transactions){
-                String amount = transaction.split(",")[0];
+        for(Transaction_Info transaction: transaction_info){
 
-                String TIN = transaction.split(",")[2].split("\\:")[1];
-
-                TIN_ALL.add(TIN);
-
-                Long amount_value = Long.parseLong(amount.split("\\:")[1]);
-
-                total_amount += amount_value;
+            if(checkExists.contains(transaction.getFull_info())) {
+                fraudRecordDetected(provider);
+                return;
             }
 
-            String TIN = String.join("~", TIN_ALL);
+            checkExists.add(transaction.getFull_info());
 
-            String value = values[0] + "," + values[1] + "," + isFraud + "," + total_amount.toString() + "," + TIN;
+            TIN_ALL.add(transaction.getTIN());
 
-            generateForwardData(values[0], value);
+            total_amount += transaction.getAmount();
         }
+
+        String TIN = String.join("~", TIN_ALL);
+
+        String value = provider.getId() + "," + provider.getName() + "," + "FALSE" + "," + total_amount.toString() + "," + TIN;
+
+        generateForwardData(provider.getId(), value);
+
 
     }
 
-    private void fraudRecordDetected(String key, String[] value) {
-        String record = value[0] + "," + value[1] + ",TRUE,-1,FRAUD";
+    private void fraudRecordDetected(Provider provider) {
+        String record = provider.getId() + "," + provider.getName() + ",TRUE,-1,FRAUD";
 
         ProducerRecord<String, String> record_send = new ProducerRecord<>
-                (propertiesConfig.getTopicFinal(), key, record);
+                (propertiesConfig.getTopicFinal(), provider.getId(), record);
 
         sendToTable.sendData(record);
 

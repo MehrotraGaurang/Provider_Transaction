@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.Service.DisplayData;
 import com.example.demo.models.Provider_Transaction;
+import com.google.gson.Gson;
+import kafka.utils.Json;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +26,10 @@ public class ProviderEndpoint {
     public List<Map<String, String>> show_transactions(){
 
         List<Map<String, String>> list = new ArrayList<>();
+//        Gson gson = new Gson();
+        List<Provider_Transaction> providers = displayData.getProviders();
 
-        List<Provider_Transaction> providers= displayData.getProviders();
+//        String result = "{";
 
         for(Provider_Transaction provider: providers){
             Map<String, String> val = new HashMap<>();
@@ -33,9 +38,14 @@ public class ProviderEndpoint {
             val.put("Is_Fraud", provider.getIsFraud());
             val.put("Amount", provider.getAmount().toString());
             val.put("TIN", provider.getTIN());
+//            String json = gson.toJson(val);
+
+//            result += json;
 
             list.add(val);
         }
+
+//        result += "}";
 
         return list;
     }
