@@ -9,6 +9,12 @@ pipeline {
     agent any
 
     stages {
+        stage('Cloning Git') {
+          steps {
+            git 'https://github.com/MehrotraGaurang/Provider_Transaction.git'
+          }
+        }
+
         stage("Build Project"){
             steps {
                 sh "mvn -version"
@@ -16,11 +22,6 @@ pipeline {
             }
         }
 
-        stage('Cloning Git') {
-              steps {
-                git 'https://github.com/MehrotraGaurang/Provider_Transaction.git'
-              }
-            }
         stage('Building image') {
           steps{
             script {
