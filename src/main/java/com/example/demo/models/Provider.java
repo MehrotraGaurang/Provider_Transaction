@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,6 +95,20 @@ public class Provider {
 
     public void setTransaction_info(String transaction_info) {
         this.transaction_info = transaction_info;
+    }
+
+    public Date getDate_Date(){
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        try {
+
+            date = formatter.parse(this.transaction_date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
     }
 }
 

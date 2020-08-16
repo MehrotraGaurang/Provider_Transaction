@@ -19,13 +19,13 @@ public class PropertiesConfig {
 
     private String topicInitial = "PROVIDER_INITIAL";
     private String topicFinal = "PROVIDER_FINAL";
-    private String bootstrap = "localhost:9092";
+    private String bootstrap = "broker:9092";
 
     public Properties createProperties(){
         Properties properties = new Properties();
 
         properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "DEMO_APPLICATION");
-        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, this.bootstrap);
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "Group2");
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());

@@ -1,5 +1,6 @@
 package com.example.demo.data;
 
+import com.example.demo.models.Provider;
 import com.example.demo.models.Provider_Transaction;
 
 import java.sql.SQLException;
@@ -11,4 +12,6 @@ public interface ProviderDao {
     void SendDataToTable(String s);
 
     List<Provider_Transaction> providers();
+
+    void insertProvider(Provider provider);
 }

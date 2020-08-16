@@ -6,27 +6,35 @@ import com.example.demo.models.Provider_Transaction;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Repository("mysql")
-@SuppressWarnings("unchecked")
-public class ProviderRecords implements ProviderDao{
+public class ProviderRecords extends JdbcDaoSupport implements ProviderDao{
 
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    DataSource dataSource;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+
+    @PostConstruct
+    private void initialize() {setDataSource(dataSource);}
+
     private PropertiesConfig propertiesConfig = new PropertiesConfig();
     private Producer<String, String> producer;
-
-    public ProviderRecords(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     private Producer<String, String> getInstance(){
 
@@ -121,5 +129,13 @@ public class ProviderRecords implements ProviderDao{
                         return list;
                     }
                 });
+    }
+
+    @Override
+    public void insertProvider(Provider provider) {
+        String query = "INSERT INTO providers VALUES (?,?,?,?);";
+
+        getJdbcTemplate()
+                .update(query, provider.getId(), provider.getName(), provider.getDate_Date(), provider.getTransaction_info());
     }
 }
