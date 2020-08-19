@@ -15,14 +15,17 @@ import java.util.Properties;
 @SuppressWarnings("unchecked")
 public class Aggregate {
 
-        private PropertiesConfig propertiesConfig = new PropertiesConfig();
-        private ProcessData processData;
-        private final Log log = LogFactory.getLog(getClass());
+        private final PropertiesConfig propertiesConfig = new PropertiesConfig();
 
         @Autowired
-        public Aggregate(ProcessData processData){
-            this.processData = processData;
-        }
+        private ProcessData processData;
+
+        private final Log log = LogFactory.getLog(getClass());
+
+//        @Autowired
+//        public Aggregate(ProcessData processData){
+//            this.processData = processData;
+//        }
 
         @PostConstruct
         public void init(){

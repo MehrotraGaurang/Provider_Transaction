@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -9,7 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class Provider {
-    String id, name, transaction_info;
+    @SerializedName("prov_id")
+    String id;
+    @SerializedName("prov_name")
+    String name;
+    @SerializedName("prov_trans_info")
+    String transaction_info;
+    @SerializedName("prov_trans_date")
     String transaction_date;
 
     List<Transaction_Info> transaction_info_array;

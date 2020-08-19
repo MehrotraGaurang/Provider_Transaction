@@ -1,8 +1,19 @@
 package com.example.demo.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Provider_Transaction {
-    private String id, name, isFraud, TIN;
-    private Long amount;
+
+    @SerializedName("prov_id")
+    String id;
+    @SerializedName("prov_name")
+    String name;
+    @SerializedName("prov_fraud")
+    String isFraud;
+    @SerializedName("prov_tin")
+    String TIN;
+    @SerializedName("prov_amount")
+    Long amount;
 
     public Provider_Transaction() {
 

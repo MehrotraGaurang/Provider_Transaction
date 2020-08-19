@@ -1,8 +1,12 @@
 package com.example.demo.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Transaction_Info {
 
+    @SerializedName("prov_address")
     String Address;
+    @SerializedName("prov_tin")
     String TIN;
 
     public String getFull_info() {
@@ -21,6 +25,7 @@ public class Transaction_Info {
     }
 
     String full_info;
+    @SerializedName("prov_amount")
     Long amount;
 
     public String getAddress() {

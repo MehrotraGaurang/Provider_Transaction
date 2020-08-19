@@ -18,12 +18,14 @@ public class ProcessData extends AbstractProcessor<String, String> {
 
     private Producer<String, String> producer;
     private PropertiesConfig propertiesConfig = new PropertiesConfig();
-    private final SendToTable sendToTable;
 
     @Autowired
-    public ProcessData(@Qualifier("SendToTable") SendToTable sendToTable){
-        this.sendToTable = sendToTable;
-    }
+    private SendToTable sendToTable;
+
+//    @Autowired
+//    public ProcessData(@Qualifier("SendToTable") SendToTable sendToTable){
+//        this.sendToTable = sendToTable;
+//    }
 
     private Producer<String, String> getInstance(){
         Properties properties = new Properties();
@@ -99,6 +101,22 @@ public class ProcessData extends AbstractProcessor<String, String> {
 
     private void generateForwardData(String key, String value) {
 
+        String[] values = value.split(",");
+
+        System.out.println(
+                "************** "  +
+                        values[0] +
+                        " " +
+                        values[1] +
+                        " " +
+                        values[2] +
+                        " " +
+                        values[3] +
+                        " " +
+                        values[4] +
+                        "\n"
+        );
+
         ProducerRecord<String, String> record = new ProducerRecord<>
                 (propertiesConfig.getTopicFinal(), key, value);
 
@@ -106,21 +124,7 @@ public class ProcessData extends AbstractProcessor<String, String> {
 
         sendToTable.sendData(value);
 
-        String[] values = value.split(",");
 
-        System.out.println(
-                "************** "  +
-                values[0] +
-                " " +
-                values[1] +
-                " " +
-                values[2] +
-                " " +
-                values[3] +
-                " " +
-                values[4] +
-                "\n"
-        );
 
         context().commit();
     }

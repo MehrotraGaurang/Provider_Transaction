@@ -17,9 +17,9 @@ import java.util.Properties;
 @SuppressWarnings("unchecked")
 public class PropertiesConfig {
 
-    private String topicInitial = "PROVIDER_INITIAL";
-    private String topicFinal = "PROVIDER_FINAL";
-    private String bootstrap = "broker:9092";
+    private String topicInitial = "Initial1";
+    private String topicFinal = "Final1";
+    private String bootstrap = "localhost:9092";
 
     public Properties createProperties(){
         Properties properties = new Properties();
