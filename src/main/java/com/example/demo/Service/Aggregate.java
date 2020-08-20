@@ -22,11 +22,6 @@ public class Aggregate {
 
         private final Log log = LogFactory.getLog(getClass());
 
-//        @Autowired
-//        public Aggregate(ProcessData processData){
-//            this.processData = processData;
-//        }
-
         @PostConstruct
         public void init(){
 
